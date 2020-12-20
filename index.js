@@ -4,7 +4,7 @@ function extractDataFromSource(source, params = {}) {
   const newParams = {defaultKeys: ['id', 'userId']};
   let extractedData = null;
   
-  // Devuelve un valor primitivo
+  // source contains a primitive value
   if(typeof source !== 'object') {
     return source;
   }
@@ -15,7 +15,7 @@ function extractDataFromSource(source, params = {}) {
   
   const arraySource = isArray ? source : Object.keys(source); 
 
-  // Devuelve un array o un objeto
+  // Iterates over source
   arraySource.map((item, key) => {
     if(!isArray && !defaultKeys.includes(item)) {
       return;
