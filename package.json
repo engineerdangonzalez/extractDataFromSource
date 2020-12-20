@@ -4,7 +4,8 @@
     "description": "",
     "main": "extractDataFromSource.js",
     "scripts": {
-        "test": "jest --no-cache ./*"
+        "test": "jest --no-cache ./*",
+        "test:coverage": "jest --coverage"
     },
     "repository": {
         "type": "git",
