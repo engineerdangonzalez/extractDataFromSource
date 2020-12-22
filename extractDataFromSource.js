@@ -14,14 +14,19 @@ function extractDataFromSource(source, config = {}) {
     // A source data must be provided
     if (!source && typeof source !== 'boolean') throw new Error('Invalid source data was provided');
 
-    const { defaultKeys } = config;
-    const newParams = { defaultKeys: Array.isArray(defaultKeys) ? defaultKeys : [] };
+    const { keys, includeKeys } = config;
+    const newParams = {
+        keys: Array.isArray(keys) ? keys : [],
+        includeKeys: typeof includeKeys === 'boolean' ? includeKeys : true
+    };
+    const inclusionOrExclusion = (includeKeys, eval) => (includeKeys ? eval : !eval);
     let extractedData = null;
 
     // source contains a primitive value
     if (typeof source !== 'object') {
         return source;
     }
+
     const isArray = Array.isArray(source);
     extractedData = isArray ? [] : {};
 
@@ -29,7 +34,7 @@ function extractDataFromSource(source, config = {}) {
 
     // Iterates over source
     arraySource.map((item, key) => {
-        if (isArray || !isArray && newParams.defaultKeys.includes(item) || !isArray && newParams.defaultKeys.length === 0) {
+        if (isArray || !isArray && inclusionOrExclusion(newParams.includeKeys, newParams.keys.includes(item)) || !isArray && newParams.keys.length === 0) {
             extractedData[isArray ? key : item] = extractDataFromSource(isArray ? item : source[item], newParams);
         }
     });
