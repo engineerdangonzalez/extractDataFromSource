@@ -1,6 +1,8 @@
 /**
- * extractDataFromSource
+ * extractDataFromSource v1.0.0
  * 
+ * @author Daniel González <engineerdangonzalez@gmail.com>
+ *
  * Extract only desired data from a source, wich can be an
  * array or an object
  * 
