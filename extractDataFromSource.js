@@ -1,22 +1,25 @@
 /**
- *
+ * extractDataFromSource
+ * 
+ * Extract only desired data from a source, wich can be an
+ * array or an object
+ * 
  * @param {array | object} source - Represents source data
- * @param {object} param1 - It's the config object
+ * @param {object} config - It's the config object
  */
 function extractDataFromSource(source, config = {}) {
 
+    // A source data must be provided
     if (!source && typeof source !== 'boolean') throw new Error('Invalid source data was provided');
 
-    const { requiredKeys } = config;
-    const newParams = { defaultKeys: ['id'].concat(requiredKeys) };
+    const { defaultKeys } = config;
+    const newParams = { defaultKeys: Array.isArray(defaultKeys) ? defaultKeys : [] };
     let extractedData = null;
 
     // source contains a primitive value
     if (typeof source !== 'object') {
         return source;
     }
-
-    const { defaultKeys } = newParams;
     const isArray = Array.isArray(source);
     extractedData = isArray ? [] : {};
 
@@ -24,10 +27,9 @@ function extractDataFromSource(source, config = {}) {
 
     // Iterates over source
     arraySource.map((item, key) => {
-        if (!isArray && !defaultKeys.includes(item)) {
-            return;
+        if (isArray || !isArray && newParams.defaultKeys.includes(item) || !isArray && newParams.defaultKeys.length === 0) {
+            extractedData[isArray ? key : item] = extractDataFromSource(isArray ? item : source[item], newParams);
         }
-        extractedData[isArray ? key : item] = extractDataFromSource(isArray ? item : source[item], newParams);
     });
 
     return extractedData;
