@@ -20,7 +20,6 @@ function extractDataFromSource(source, config = {}) {
         includeKeys: typeof includeKeys === 'boolean' ? includeKeys : true
     };
     const inclusionOrExclusion = (includeKeys, stat) => (includeKeys ? stat : !stat);
-    let extractedData = null;
 
     // source contains a primitive value
     if (typeof source !== 'object') {
@@ -28,7 +27,7 @@ function extractDataFromSource(source, config = {}) {
     }
 
     const isArray = Array.isArray(source);
-    extractedData = isArray ? [] : {};
+    let extractedData = isArray ? [] : {};
 
     const arraySource = isArray ? source : Object.keys(source);
 
@@ -40,6 +39,7 @@ function extractDataFromSource(source, config = {}) {
     });
 
     return extractedData;
+
 }
 
 module.exports = extractDataFromSource;
