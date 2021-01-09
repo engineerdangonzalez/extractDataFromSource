@@ -19,7 +19,7 @@ function extractDataFromSource(source, config = {}) {
         keys: Array.isArray(keys) ? keys : [],
         includeKeys: typeof includeKeys === 'boolean' ? includeKeys : true
     };
-    const inclusionOrExclusion = (includeKeys, eval) => (includeKeys ? eval : !eval);
+    const inclusionOrExclusion = (includeKeys, stat) => (includeKeys ? stat : !stat);
     let extractedData = null;
 
     // source contains a primitive value
