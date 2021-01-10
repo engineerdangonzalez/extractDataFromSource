@@ -12,15 +12,12 @@
 function extractDataFromSource(source, config = {}) {
 
     // A source data must be provided
-    if (!source && typeof source !== 'boolean') throw new Error('Invalid source data was provided');
+    // if (!source && typeof source !== 'boolean') throw new Error('Invalid source data was provided');
 
-    const { keys, includeKeys } = config;
+    const { keys } = config;
     const newParams = {
-        keys: Array.isArray(keys) ? keys : [],
-        includeKeys: typeof includeKeys === 'boolean' ? includeKeys : true
+        keys: Array.isArray(keys) ? keys : []
     };
-    const inclusionOrExclusion = (includeKeys, stat) => (includeKeys ? stat : !stat);
-    let extractedData = null;
 
     // source contains a primitive value
     if (typeof source !== 'object') {
@@ -28,18 +25,26 @@ function extractDataFromSource(source, config = {}) {
     }
 
     const isArray = Array.isArray(source);
-    extractedData = isArray ? [] : {};
+    let extractedData = isArray ? [] : {};
 
-    const arraySource = isArray ? source : Object.keys(source);
-
-    // Iterates over source
-    arraySource.map((item, key) => {
-        if (isArray || !isArray && inclusionOrExclusion(newParams.includeKeys, newParams.keys.includes(item)) || !isArray && newParams.keys.length === 0) {
-            extractedData[isArray ? key : item] = extractDataFromSource(isArray ? item : source[item], newParams);
+    if (!isArray) { // Object
+        for (const item in source) {
+            if (newParams.keys.includes(item) || typeof source[item] === 'object') {
+                const newSource = extractDataFromSource(source[item], newParams);
+                if (typeof newSource !== 'object' && newSource || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
+                    extractedData[item] = newSource;
+                }
+            }
         }
-    });
+    } else { // Array
+        source.map((item, key) => {
+            const extracted = extractDataFromSource(item, newParams);
+            extractedData[key] = extracted;
+        });
+    }
 
     return extractedData;
+
 }
 
 module.exports = extractDataFromSource;
