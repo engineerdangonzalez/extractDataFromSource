@@ -31,7 +31,7 @@ function extractDataFromSource(source, config = {}) {
         for (const item in source) {
             if (newParams.keys.includes(item) || typeof source[item] === 'object') {
                 const newSource = extractDataFromSource(source[item], newParams);
-                if (typeof newSource !== 'object' && newSource || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
+                if (typeof newSource !== 'object' || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
                     extractedData[item] = newSource;
                 }
             }
