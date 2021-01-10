@@ -1,6 +1,7 @@
 const https = require('https');
 const extractDataFromSource = require('./extractDataFromSource.js');
 
+
 https.get('https://rickandmortyapi.com/api/character/?page=19', (resp) => {
 
     let defaultSource = '';
