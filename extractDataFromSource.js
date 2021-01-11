@@ -11,9 +11,10 @@
  */
 function extractDataFromSource(source, config = {}) {
 
-    const { keys } = config;
+    const { keys, allowEmptyValues } = config;
     const newParams = {
-        keys: Array.isArray(keys) ? keys : []
+        keys: Array.isArray(keys) ? keys : [],
+        allowEmptyValues: typeof allowEmptyValues === 'boolean' ? allowEmptyValues : true
     };
 
     // source contains a primitive value
@@ -26,12 +27,16 @@ function extractDataFromSource(source, config = {}) {
 
     if (!isArray) { // Object
         for (const item in source) {
-            if (newParams.keys.includes(item) || typeof source[item] === 'object') {
+
+            if (!newParams.allowEmptyValues && newParams.keys.includes(item) && source[item] ||
+                newParams.allowEmptyValues && newParams.keys.includes(item) ||
+                typeof source[item] === 'object') {
                 const newSource = extractDataFromSource(source[item], newParams);
                 if (typeof newSource !== 'object' || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
                     extractedData[item] = newSource;
                 }
             }
+
         }
     } else { // Array
         source.map((item, key) => {
