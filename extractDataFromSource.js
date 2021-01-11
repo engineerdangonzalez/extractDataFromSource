@@ -28,13 +28,15 @@ function extractDataFromSource(source, config = {}) {
     if (!isArray) { // Object
         for (const item in source) {
 
-            if (!newParams.allowEmptyValues && newParams.keys.includes(item) && source[item] ||
-                newParams.allowEmptyValues && newParams.keys.includes(item) ||
-                typeof source[item] === 'object') {
-                const newSource = extractDataFromSource(source[item], newParams);
-                if (typeof newSource !== 'object' || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
-                    extractedData[item] = newSource;
-                }
+            const denyEmptyValues = !newParams.allowEmptyValues ? newParams.keys.includes(item) && source[item] : newParams.keys.includes(item);
+
+            if(!denyEmptyValues && typeof source[item] !== 'object') {
+                continue;
+            }
+
+            const newSource = extractDataFromSource(source[item], newParams);
+            if (typeof newSource !== 'object' || typeof newSource === 'object' && Object.keys(newSource).length > 0) {
+                extractedData[item] = newSource;
             }
 
         }
