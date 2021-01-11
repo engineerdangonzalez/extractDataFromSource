@@ -11,9 +11,6 @@
  */
 function extractDataFromSource(source, config = {}) {
 
-    // A source data must be provided
-    if (!source && typeof source !== 'boolean') throw new Error('Invalid source data was provided');
-
     const { keys } = config;
     const newParams = {
         keys: Array.isArray(keys) ? keys : []
